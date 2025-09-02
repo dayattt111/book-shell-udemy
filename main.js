@@ -61,9 +61,26 @@ function makeBook(todoObject) {
     const textYear = document.createElement('p');
     textYear.innerText = todoObject.year;
 
+    const buttonS = document.createElement('button');
+    const buttonC = document.createElement('button');
+    const buttonD = document.createElement('button');
+
+
+    buttonS.classList.add('bookItemIsCompleteButton');
+    buttonC.classList.add('bookItemDeleteButton');
+    buttonD.classList.add('bookItemEditButton');
+
+// optional: text untuk tiap tombol
+    buttonS.innerText = "Selesai dibaca";
+    buttonC.innerText = "Edit Buku";
+    buttonD.innerText = "Hapus Buku";
+    // function classListt(){
+    //     return
+    // };
+
     const textContainer = document.createElement('div');
     textContainer.classList.add('inner');
-    textContainer.append(textTitle, textAuthor, textYear);
+    textContainer.append(textTitle, textAuthor, textYear, buttonS, buttonC, buttonD);
 
     const container = document.createElement('div');
 
@@ -76,11 +93,22 @@ function makeBook(todoObject) {
 
 document.addEventListener(RENDER_EVENT, function () {
     //   console.log(bookItem);
-      const uncompletedBookList = document.getElementById('bookItem');
+      const uncompletedBookList = document.getElementById('bookItems');
+      const completedBookList = document.getElementById('completeBookList');
       uncompletedBookList.innerHTML = '';
+    //   completedBookList.innerHTML = '';
      
-      for (const bookItem of books) {
-        const bookElement = makeBook(bookItem);
-        uncompletedBookList.append(bookElement);
-      }
+
+    // console.log(uncompletedBookList);
+    // console.log(completedBookList);
+
+    // if(uncompletedBookList === false){
+        for (const bookItem of books) {
+          const bookElement = makeBook(bookItem);
+          if(!bookItem === isChecked){
+              uncompletedBookList.append(bookElement);
+          }
+        }
+    // }
+
 });
