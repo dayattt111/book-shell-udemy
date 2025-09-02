@@ -184,20 +184,20 @@ button:active {
   background: linear-gradient(135deg, #1c7c31, #145522);
 }
 
-[bookItemDeleteButton] {
+.bookItemDeleteButton {
   background: linear-gradient(135deg, #e63946, #b71c1c);
 }
 
-[bookItemDeleteButton]:hover {
+.bookItemDeleteButton:hover {
   background: linear-gradient(135deg, #b71c1c, #7f0a0a);
 }
 
-[bookItemEditButton] {
+.bookItemEditButton{
   background: linear-gradient(135deg, #ffb703, #fb8500);
   color: #222;
 }
 
-[bookItemEditButton]:hover {
+.bookItemEditButton:hover {
   background: linear-gradient(135deg, #e65100, #b34700);
   color: #fff;
 }
