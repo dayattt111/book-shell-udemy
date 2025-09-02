@@ -44,5 +44,6 @@ Selamat mengerjakan dan sukses selalu!
   Disini saya sudah berhasil Membuat CRUD BookShell dengan menggunakan Seesion Storage dan Web Storage yang saya simpan di array dan object.
 ```
 
-Nama : M. A. Hidayat
-Github : github.com/dayattt111
+# Nama : M. A. Hidayat
+## Github : github.com/dayattt111
+### git@github.com:dayattt111/book-shell-udemy.git
