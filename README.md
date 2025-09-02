@@ -36,3 +36,13 @@ Untuk mempermudah penilaian submission yang dikirim, Anda perlu memahami ketentu
 ```
 
 Selamat mengerjakan dan sukses selalu!
+
+
+
+# Massage :
+```html
+  Disini saya sudah berhasil Membuat CRUD BookShell dengan menggunakan Seesion Storage dan Web Storage yang saya simpan di array dan object.
+```
+
+Nama : M. A. Hidayat
+Github : github.com/dayattt111

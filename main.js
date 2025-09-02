@@ -1,14 +1,6 @@
-    // if(isChecked){
-    //     alert('Trueee');
-    //     const todoObject = generateTodoObject(generatedID, titleBook, authBook, yearBook, isChecked);
-    //     books.push(todoObject);
-    // } else{
-        //     alert('Falsee');
-        // };
-        // console.log(isChecked);
-        
 const books = [];
 const RENDER_EVENT = 'render-book';
+let editBookId = null; // penanda mode edit
 
 document.addEventListener('DOMContentLoaded', function () {
     const submitForm = document.getElementById('bookForm');
@@ -17,12 +9,11 @@ document.addEventListener('DOMContentLoaded', function () {
         addBook();
     });
 });
-        
+
 function generateId() {
-        return +new Date();
-    }
-        
-        // console.log(books);
+    return +new Date();
+}
+    
 function generateTodoObject(id, title, author, year, isCompleted) {
     return {
         id,
@@ -33,24 +24,33 @@ function generateTodoObject(id, title, author, year, isCompleted) {
     };
 }
 
-document.addEventListener(RENDER_EVENT, function () {
-    console.log(books);
-});
-
 function addBook() {
     const titleBook = document.getElementById('bookFormTitle').value;
     const authBook = document.getElementById('bookFormAuthor').value;
     const yearBook = document.getElementById('bookFormYear').value;
 
     const checkBook = document.getElementById('bookFormIsComplete');
-    let isCompleted = checkBook.checked; 
+    let isCompleted = checkBook.checked;
 
-    const generatedID = generateId();
-    const todoObject = generateTodoObject(generatedID, titleBook, authBook, yearBook, isCompleted);
-
-    books.push(todoObject);
+    if (editBookId !== null) {
+        // Update buku lama
+        const bookTarget = books.find(book => book.id === editBookId);
+        if (bookTarget) {
+            bookTarget.title = titleBook;
+            bookTarget.author = authBook;
+            bookTarget.year = yearBook;
+            bookTarget.isCompleted = isCompleted;
+        }
+        editBookId = null; 
+    } else {
+        // Tambah baru
+        const generatedID = generateId();
+        const todoObject = generateTodoObject(generatedID, titleBook, authBook, yearBook, isCompleted);
+        books.push(todoObject);
+    }
 
     document.dispatchEvent(new Event(RENDER_EVENT));
+    document.getElementById('bookForm').reset(); // reset form setelah submit
 }
 
 function makeBook(todoObject) {
@@ -64,19 +64,35 @@ function makeBook(todoObject) {
     textYear.innerText = "Tahun: " + todoObject.year;
 
     const buttonS = document.createElement('button');
-    const buttonC = document.createElement('button');
+    const buttonE = document.createElement('button');
     const buttonD = document.createElement('button');
 
     buttonS.classList.add('bookItemIsCompleteButton');
-    buttonC.classList.add('bookItemDeleteButton');
-    buttonD.classList.add('bookItemEditButton');
+    buttonE.classList.add('bookItemEditButton');
+    buttonD.classList.add('bookItemDeleteButton');
 
-    buttonS.innerText = "Selesai dibaca";
-    buttonC.innerText = "Edit Buku";
+    // Tombol selesai dibaca
+    buttonS.innerText = todoObject.isCompleted ? "Belum selesai" : "Selesai dibaca";
+    buttonS.addEventListener('click', function () {
+        toggleBook(todoObject.id);
+    });
+
+    // Tombol edit
+    buttonE.innerText = "Edit Buku";
+    buttonE.addEventListener('click', function () {
+        editBook(todoObject.id);
+    });
+
+    // Tombol hapus
     buttonD.innerText = "Hapus Buku";
+    buttonD.addEventListener('click', function () {
+        if (confirm("Yakin hapus buku ini?")) {
+            deleteBook(todoObject.id);
+        }
+    });
 
     const actionContainer = document.createElement('div');
-    actionContainer.append(buttonS, buttonC, buttonD);
+    actionContainer.append(buttonS, buttonE, buttonD);
 
     const textContainer = document.createElement('div');
     textContainer.classList.add('inner');
@@ -90,10 +106,41 @@ function makeBook(todoObject) {
     return container;
 }
 
+function toggleBook(bookId) {
+    const bookTarget = books.find(book => book.id === bookId);
+    if (!bookTarget) return;
+
+    bookTarget.isCompleted = !bookTarget.isCompleted;
+    document.dispatchEvent(new Event(RENDER_EVENT));
+}
+
+function deleteBook(bookId) {
+    const bookIndex = books.findIndex(book => book.id === bookId);
+    if (bookIndex === -1) return;
+
+    books.splice(bookIndex, 1);
+    document.dispatchEvent(new Event(RENDER_EVENT));
+}
+
+function editBook(bookId) {
+    const bookTarget = books.find(book => book.id === bookId);
+    if (!bookTarget) return;
+
+    // Isi ulang form dengan data lama
+    document.getElementById('bookFormTitle').value = bookTarget.title;
+    document.getElementById('bookFormAuthor').value = bookTarget.author;
+    document.getElementById('bookFormYear').value = bookTarget.year;
+    document.getElementById('bookFormIsComplete').checked = bookTarget.isCompleted;
+
+    // Set flag edit
+    editBookId = bookId;
+}
+
 document.addEventListener(RENDER_EVENT, function () {
     const incompleteBookList = document.getElementById('incompleteBookList');
     const completedBookList = document.getElementById('completeBookList');
 
+    // Kosongkan rak dulu sebelum render ulang
     incompleteBookList.innerHTML = '';
     completedBookList.innerHTML = '';
 
